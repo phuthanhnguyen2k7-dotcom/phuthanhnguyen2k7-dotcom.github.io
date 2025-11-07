@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học float và clear trong trang web</title>
+    <style>
+        .container{
+            border: 1px solid grey;
+            overflow: auto;
+            padding: 10px;
+        }
+        .floated-image{
+            float: left;
+            width: 800px;
+            height: 600px;
+            margin-right: 15px;
+        }
+        .footer{
+            clear: both;
+            background-color: grey;
+            margin-top: 20px;
+            padding: 10px; 
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="float.jpg" alt="Ảnh float" class="floated-image">
+        <p>
+            Đây là một đoạn văn bản dài. Thuộc tính float thường được sử dụng để văn bản 
+            bao quanh hình ảnh một cách gọn gàng. Hình ảnh đang được nói ở bên trái 
+            và đoạn văn bản bọc xung quanh nó
+        </p>
+    </div>
+    <div class="footer">
+        Đây là phần chân trang, không bị ảnh hưởng bởi class vì đã được clear.
+    </div>
+</body>
+</html>

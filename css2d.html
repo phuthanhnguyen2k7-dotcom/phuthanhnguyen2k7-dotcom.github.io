@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Học CSS2D trong trang web</title>
+    <link rel="stylesheet" href="css2d.css">
+</head>
+<body>
+    <header>
+        <h1>CSS 2D Transform</h1>
+        <p>Di chuyển chuột vào phần item để xem hiệu ứng</p>
+    </header>
+    <section class="grid">
+        <article class="card">
+            <h2>1) translate(x,y)</h2>
+            <div class="demo translate">
+                <div class="box">Translate</div>
+            </div>
+            <div class="note">
+                Dịch phần tử theo trục X, Y.
+                Ví dụ <code>transform; translate(50px, 30px)</code>
+            </div>
+        </article>
+        <article class="card">
+            <h2>2) rotate(angle)</h2>
+            <div class="demo rotate">
+                <div class="box">Rotate</div>
+            </div>
+            <div class="note">
+                Xoay quanh tâm: <code>transform: rotate(45deg)</code>
+            </div>
+        </article>
+        <article class="card">
+            <h2>3) scale(sx[, sy])</h2>
+            <div class="demo scale">
+                <div class="box">Scale</div>
+            </div>
+            <div class="note">
+                Phóng/thu: <code>transform: scale(1,4)</code>
+            </div>
+        </article>
+        <article class="card">
+            <h2>4) skew(ax[, ay])</h2>
+            <div class="demo skew">
+                <div class="box">Skew</div>
+            </div>
+            <div class="note">
+                Nghiêng theo trục X/Y: <code>transform: skew(20deg,10geg)</code>
+            </div>
+        </article>
+        <article class="card">
+            <h2>5) Kết hợp nhiều transfrom</h2>
+            <div class="demo combo">
+                <div class="box">Combo</div>
+            </div>
+            <div class="note">
+                Ví dụ: <code>translate(...) rotate(...) scale(...) skew(...)</code>
+            </div>
+        </article>
+        <article class="card">
+            <h2>6) matrix(a,b,c,c,tx,ty)</h2>
+            <div class="demo matrix">
+                <div class="box">Matrix</div>
+            </div>
+            <div class="note">
+                Ma trận 2D cho phép kết hợp các phép biến đổi trong một lệnh.
+                Ở đây gần tương đương <code>rotate(20deg) + scale(1,126)</code>
+            </div>
+        </article>
+    </section>
+    <footer>
+        &copy; 2025 - CSS 2D tranfors
+    </footer>
+</body>
+</html>

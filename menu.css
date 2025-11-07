@@ -1,0 +1,101 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+}
+a{
+    text-decoration: none;
+    color: brown;
+}
+.box{
+    background-color: rgb(202, 97, 97);
+    padding: 20px;
+    margin: 3px;
+    border-radius: 4px;
+}
+.title{
+    color: #2c3e50;
+    margin-top: 0;
+}
+.btn{
+    padding: 10px;
+    background-color: aliceblue;
+    color: black;
+    border-radius: 4px;
+    margin-top: 10px;
+    display: inline-block;
+    transition: background 0.3s;
+}
+.btn:hover{
+    background-color: green;
+}
+#header{
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 20px;
+}
+#header h1{
+    font-size: 30px;
+    margin: 0;
+}
+#menu{
+    background-color: #34495e;
+}
+#menu ul{
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+}
+#menu ul li{
+    position: relative;
+}
+#menu ul li a{
+    display: block;
+    padding: 15px;
+}
+#menu ul li:hover{
+    background-color: green;
+}
+#menu ul li ul{
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: #34495e;
+    min-width: 180px;
+    flex-direction: column;
+    z-index: 100;
+}
+#menu ul li:hover ul{
+    display: flex;
+}
+#menu ul li ul li ul{
+    top: 0;
+    left: 100%;
+}
+#main{
+    display: flex;
+    max-width: 1200px;
+    margin: 20px auto;
+    gap: 20px;
+}
+#content{
+    flex: 3;
+}
+#sidebar{
+    flex: 1;
+}
+#footer{
+    background-color: #2c3e50;
+    color: white;
+    text-align: center;
+    padding: 15px 0;
+    margin-top: 20px;
+}
+#footer p{
+    margin: 0;
+}
