@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Banker's Algorithm Simulator</title>
+<style>
+    body {
+        font-family: Arial;
+        background: #0f172a;
+        color: white;
+        text-align: center;
+    }
+    h1 {
+        margin: 20px;
+    }
+    .container {
+        display: flex;
+        justify-content: center;
+        gap: 40px;
+        flex-wrap: wrap;
+    }
+    .card {
+        background: #1e293b;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    }
+    input {
+        width: 50px;
+        margin: 5px;
+        padding: 5px;
+        text-align: center;
+        border-radius: 6px;
+        border: none;
+    }
+    button {
+        margin-top: 20px;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 10px;
+        background: #22c55e;
+        color: white;
+        font-weight: bold;
+        cursor: pointer;
+    }
+    button:hover {
+        background: #16a34a;
+    }
+    .result {
+        margin-top: 20px;
+        font-size: 18px;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>💻 Banker’s Algorithm Simulator</h1>
+
+<div>
+    Số tiến trình: <input type="number" id="n" value="3">
+    Số tài nguyên: <input type="number" id="m" value="3">
+    <button onclick="generateTables()">Tạo bảng</button>
+</div>
+
+<div class="container">
+    <div class="card">
+        <h3>Allocation</h3>
+        <div id="allocation"></div>
+    </div>
+
+    <div class="card">
+        <h3>Max</h3>
+        <div id="max"></div>
+    </div>
+
+    <div class="card">
+        <h3>Available</h3>
+        <div id="available"></div>
+    </div>
+</div>
+
+<button onclick="runBanker()">Chạy thuật toán</button>
+
+<div class="result" id="result"></div>
+
+<script>
+function generateTables() {
+    let n = document.getElementById("n").value;
+    let m = document.getElementById("m").value;
+
+    let allocDiv = document.getElementById("allocation");
+    let maxDiv = document.getElementById("max");
+    let availDiv = document.getElementById("available");
+
+    allocDiv.innerHTML = "";
+    maxDiv.innerHTML = "";
+    availDiv.innerHTML = "";
+
+    for (let i = 0; i < n; i++) {
+        let rowA = document.createElement("div");
+        let rowM = document.createElement("div");
+
+        for (let j = 0; j < m; j++) {
+            rowA.innerHTML += `<input id="a${i}${j}" type="number" value="0">`;
+            rowM.innerHTML += `<input id="m${i}${j}" type="number" value="0">`;
+        }
+
+        allocDiv.appendChild(rowA);
+        maxDiv.appendChild(rowM);
+    }
+
+    for (let j = 0; j < m; j++) {
+        availDiv.innerHTML += `<input id="av${j}" type="number" value="0">`;
+    }
+}
+
+function runBanker() {
+    let n = document.getElementById("n").value;
+    let m = document.getElementById("m").value;
+
+    let allocation = [];
+    let max = [];
+    let need = [];
+    let available = [];
+
+    for (let i = 0; i < n; i++) {
+        allocation[i] = [];
+        max[i] = [];
+        need[i] = [];
+
+        for (let j = 0; j < m; j++) {
+            let a = parseInt(document.getElementById(`a${i}${j}`).value);
+            let mx = parseInt(document.getElementById(`m${i}${j}`).value);
+
+            allocation[i][j] = a;
+            max[i][j] = mx;
+            need[i][j] = mx - a;
+        }
+    }
+
+    for (let j = 0; j < m; j++) {
+        available[j] = parseInt(document.getElementById(`av${j}`).value);
+    }
+
+    let work = [...available];
+    let finish = Array(parseInt(n)).fill(false);
+    let safeSeq = [];
+
+    while (safeSeq.length < n) {
+        let found = false;
+
+        for (let i = 0; i < n; i++) {
+            if (!finish[i]) {
+                let ok = true;
+
+                for (let j = 0; j < m; j++) {
+                    if (need[i][j] > work[j]) {
+                        ok = false;
+                        break;
+                    }
+                }
+
+                if (ok) {
+                    for (let j = 0; j < m; j++) {
+                        work[j] += allocation[i][j];
+                    }
+
+                    safeSeq.push("P" + i);
+                    finish[i] = true;
+                    found = true;
+                }
+            }
+        }
+
+        if (!found) {
+            document.getElementById("result").innerHTML =
+                "❌ Deadlock! Hệ thống không an toàn.";
+            return;
+        }
+    }
+
+    document.getElementById("result").innerHTML =
+        "✅ An toàn! Chuỗi: " + safeSeq.join(" → ");
+}
+</script>
+
+</body>
+</html>
