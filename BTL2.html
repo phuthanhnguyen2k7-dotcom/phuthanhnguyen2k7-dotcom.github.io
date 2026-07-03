@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Đặt Món Ăn Trực Tuyến - Báo Cáo BTL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-color: #e74c3c;
+            --primary-hover: #c0392b;
+            --secondary-color: #2ecc71;
+            --dark-color: #2c3e50;
+            --light-bg: #f8f9fa;
+            --white: #ffffff;
+            --border-color: #dee2e6;
+            --text-muted: #7f8c8d;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            color: var(--dark-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        /* Header Navigation */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .navbar {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--dark-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: var(--primary-color);
+        }
+
+        .nav-buttons {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .cart-btn {
+            position: relative;
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            color: var(--dark-color);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: var(--primary-color);
+            color: var(--white);
+            font-size: 11px;
+            padding: 2px 6px;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+
+        .btn-toggle-role {
+            background-color: var(--dark-color);
+            color: var(--white);
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Main Content App Views */
+        .app-view {
+            display: none;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+            flex: 1;
+            width: 100%;
+        }
+
+        .app-view.active {
+            display: block;
+        }
+
+        /* Public - Trang chủ & Thực đơn */
+        .search-filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .search-input-wrap {
+            flex: 1;
+            position: relative;
+            min-width: 250px;
+        }
+
+        .search-input-wrap input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .search-input-wrap i {
+            position: absolute;
+            left: 15px;
+            top: 13px;
+            color: var(--text-muted);
+        }
+
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            outline: none;
+            background-color: var(--white);
+            min-width: 180px;
+        }
+
+        .food-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 25px;
+        }
+
+        .food-card {
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            border: 1px solid #f1f2f6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .food-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .food-body {
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .food-tag {
+            background-color: #edf2f7;
+            color: #4a5568;
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 4px;
+            align-self: flex-start;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+
+        .food-title {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .food-text {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 15px;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .food-price-action {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: auto;
+        }
+
+        .card-price {
+            font-weight: 700;
+            color: var(--primary-color);
+            font-size: 16px;
+        }
+
+        .btn-add-cart {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+        }
+
+        .btn-add-cart:hover {
+            background-color: var(--primary-hover);
+        }
+
+        /* Public - Giỏ hàng & Thanh toán */
+        .cart-container {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .cart-container { grid-template-columns: 1fr; }
+        }
+
+        .panel {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .panel-title {
+            font-size: 18px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .cart-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .cart-table th, .cart-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .qty-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-qty {
+            background-color: #e2e8f0;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-delete-item {
+            color: var(--primary-color);
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 5px;
+            outline: none;
+        }
+
+        .error-msg {
+            color: var(--primary-color);
+            font-size: 12px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .summary-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .btn-checkout {
+            width: 100%;
+            background-color: var(--secondary-color);
+            color: var(--white);
+            border: none;
+            padding: 12px;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+        }
+
+        /* Public - Theo dõi đơn hàng */
+        .order-tracking-card {
+            background: var(--white);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .badge-status {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .status-pending { background-color: #ffeaa7; color: #d63031; }
+        .status-shipping { background-color: #74b9ff; color: #0984e3; }
+        .status-completed { background-color: #55efc4; color: #00b894; }
+        .status-cancelled { background-color: #dfe6e9; color: #636e72; }
+
+        /* Admin - Bảng điều khiển quản trị */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 200px 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 768px) {
+            .admin-layout { grid-template-columns: 1fr; }
+        }
+
+        .admin-sidebar {
+            background-color: var(--white);
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+
+        .admin-menu {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .admin-menu li {
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .admin-menu li.active, .admin-menu li:hover {
+            background-color: var(--primary-color);
+            color: var(--white);
+        }
+
+        .admin-subview {
+            display: none;
+        }
+
+        .admin-subview.active {
+            display: block;
+        }
+
+        .admin-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: var(--white);
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .admin-table th, .admin-table td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .admin-table th {
+            background-color: #f1f2f6;
+        }
+
+        .btn-action {
+            padding: 5px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--white);
+            margin-right: 5px;
+        }
+
+        .btn-edit { background-color: #f1c40f; }
+        .btn-delete { background-color: #e74c3c; }
+
+        .btn-global-add {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-bottom: 15px;
+            font-weight: bold;
+        }
+
+        /* Modal Sửa/Thêm món */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+        }
+
+        .modal-content {
+            background-color: var(--white);
+            padding: 25px;
+            border-radius: 8px;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: var(--white);
+            text-align: center;
+            padding: 15px;
+            margin-top: auto;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="navbar">
+            <a onclick="switchView('public-menu')" class="logo"><i class="fa-solid fa-pizza-slice"></i> FIT Food Delivery</a>
+            
+            <ul class="nav-links">
+                <li><a id="lnk-menu" onclick="switchView('public-menu')" class="active">Thực Đơn</a></li>
+                <li><a id="lnk-tracking" onclick="switchView('public-tracking')">Theo Dõi Đơn Hàng</a></li>
+            </ul>
+
+            <div class="nav-buttons">
+                <button class="cart-btn" onclick="switchView('public-cart')">
+                    <i class="fa-solid fa-basket-shopping"></i>
+                    <span class="cart-badge" id="cartCountGlobal">0</span>
+                </button>
+                <button class="btn-toggle-role" id="btnRoleToggle" onclick="toggleRole()">
+                    <i class="fa-solid fa-user-gear"></i> Chuyển sang Admin
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <div id="public-menu" class="app-view active">
+        <div class="search-filter-bar">
+            <div class="search-input-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="text" id="custSearchInput" placeholder="Tìm tên món ăn hoặc mô tả..." oninput="filterFoodMenu()">
+            </div>
+            <select class="filter-select" id="custCategorySelect" onchange="filterFoodMenu()">
+                <option value="all">Tất cả danh mục</option>
+                <option value="Món chính">Món chính</option>
+                <option value="Khai vị">Khai vị</option>
+                <option value="Đồ uống">Đồ uống</option>
+            </select>
+        </div>
+        <div class="food-grid" id="publicFoodGrid">
+            </div>
+    </div>
+
+    <div id="public-cart" class="app-view">
+        <div class="cart-container">
+            <div class="panel">
+                <h3 class="panel-title">Món ăn đã chọn</h3>
+                <table class="cart-table">
+                    <thead>
+                        <tr>
+                            <th>Món ăn</th>
+                            <th>Đơn giá</th>
+                            <th>Số lượng</th>
+                            <th>Tổng cộng</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cartTableBody">
+                        </tbody>
+                </table>
+            </div>
+
+            <div class="panel">
+                <h3 class="panel-title">Thông tin giao hàng & Thanh toán</h3>
+                <form id="checkoutForm" onsubmit="event.preventDefault(); validateAndCheckout();">
+                    <div class="form-group">
+                        <label>Họ và tên *</label>
+                        <input type="text" id="orderName" placeholder="Nhập tên người nhận">
+                        <span class="error-msg" id="err-name">Vui lòng điền họ tên hợp lệ.</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại *</label>
+                        <input type="text" id="orderPhone" placeholder="Nhập số điện thoại liên hệ">
+                        <span class="error-msg" id="err-phone">Số điện thoại phải từ 9-11 số.</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Địa chỉ nhận hàng *</label>
+                        <textarea id="orderAddress" rows="3" placeholder="Ghi chi tiết số nhà, tên đường, quận/huyện..."></textarea>
+                        <span class="error-msg" id="err-address">Vui lòng nhập địa chỉ giao hàng cụ thể.</span>
+                    </div>
+
+                    <div style="margin-top: 20px; border-top: 1px solid var(--border-color); padding-top: 15px;">
+                        <div class="summary-line"><span>Tạm tính:</span><span id="txt-subtotal">0 đ</span></div>
+                        <div class="summary-line"><span>Phí giao hàng:</span><span id="txt-shipping">15.000 đ</span></div>
+                        <div class="summary-line" style="font-weight:bold; font-size:16px; color:var(--primary-color);">
+                            <span>Tổng tiền:</span><span id="txt-total">0 đ</span>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-checkout"><i class="fa-solid fa-money-check-dollar"></i> Xác Nhận Đặt Hàng</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="public-tracking" class="app-view">
+        <h2 style="margin-bottom: 20px;"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử đơn hàng của bạn</h2>
+        <div id="orderTrackingList">
+            </div>
+    </div>
+
+    <div id="admin-dashboard" class="app-view">
+        <div class="admin-layout">
+            <aside class="admin-sidebar">
+                <ul class="admin-menu">
+                    <li id="menu-item-foods" class="active" onclick="switchAdminTab('foods')"><i class="fa-solid fa-utensils"></i> Quản lý món</li>
+                    <li id="menu-item-orders" onclick="switchAdminTab('orders')"><i class="fa-solid fa-file-invoice-dollar"></i> Đơn hàng</li>
+                </ul>
+            </aside>
+
+            <main class="panel" style="overflow-x: auto;">
+                <div id="admin-subview-foods" class="admin-subview active">
+                    <div style="display:flex; justify-content: space-between; align-items:center; margin-bottom: 15px;">
+                        <h3>Danh mục món ăn hệ thống</h3>
+                        <button class="btn-global-add" onclick="openFoodModal('add')"><i class="fa-solid fa-plus"></i> Thêm món mới</button>
+                    </div>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Ảnh</th>
+                                <th>Tên món</th>
+                                <th>Danh mục</th>
+                                <th>Giá bán</th>
+                                <th>Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminFoodTableBody">
+                            </tbody>
+                    </table>
+                </div>
+
+                <div id="admin-subview-orders" class="admin-subview">
+                    <h3 style="margin-bottom: 15px;">Danh sách xử lý đơn hàng</h3>
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Mã ĐH</th>
+                                <th>Khách hàng</th>
+                                <th>Thông tin đơn</th>
+                                <th>Tổng tiền</th>
+                                <th>Trạng thái</th>
+                                <th>Cập nhật</th>
+                            </tr>
+                        </thead>
+                        <tbody id="adminOrderTableBody">
+                            </tbody>
+                    </table>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div class="modal" id="foodModal">
+        <div class="modal-content">
+            <h3 id="modalTitle" style="margin-bottom: 15px;">Thêm món ăn</h3>
+            <input type="hidden" id="modalFoodId">
+            <div class="form-group">
+                <label>Tên món ăn</label>
+                <input type="text" id="modalFoodName" required>
+            </div>
+            <div class="form-group">
+                <label>Danh mục</label>
+                <select id="modalFoodCategory" class="filter-select" style="width:100%">
+                    <option value="Món chính">Món chính</option>
+                    <option value="Khai vị">Khai vị</option>
+                    <option value="Đồ uống">Đồ uống</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Giá bán (VNĐ)</label>
+                <input type="number" id="modalFoodPrice" required>
+            </div>
+            <div class="form-group">
+                <label>Đường dẫn hình ảnh (URL)</label>
+                <input type="text" id="modalFoodImage" placeholder="https://example.com/image.jpg">
+            </div>
+            <div class="form-group">
+                <label>Mô tả ngắn</label>
+                <textarea id="modalFoodDesc" rows="3"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-toggle-role" style="background-color: #7f8c8d;" onclick="closeFoodModal()">Hủy</button>
+                <button class="btn-global-add" style="margin-bottom:0;" onclick="saveFoodForm()">Lưu lại</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2026 - Bài tập lớn thực hành Thiết kế & Lập trình Front-End</p>
+    </footer>
+
+    <script>
+        // --- 1. CẤU HÌNH & DỮ LIỆU ĐẦU VÀO ---
+        // Bạn có thể thay link MockAPI của bạn vào 2 biến dưới đây để đồng bộ trực tuyến đám mây
+        const API_FOODS_URL = "https://6a4288d07602860e65219e9a.mockapi.io/foods";
+        const API_ORDERS_URL = "https://6a4288d07602860e65219e9a.mockapi.io/order";
+
+        let foods = []; 
+        let orders = []; 
+        let cart = [];   
+        let currentRole = 'public'; // 'public' hoặc 'admin'
+
+        // --- 2. KHỞI CHẠY KHI TẢI TRANG ---
+        window.addEventListener("DOMContentLoaded", async () => {
+            await loadDataFromAPI();
+            updateCartGlobalCount();
+        });
+
+        async function loadDataFromAPI() {
+            try {
+                let resF = await fetch(API_FOODS_URL);
+                foods = resF.ok ? await resF.json() : defaultFoods;
+            } catch { foods = defaultFoods; }
+
+            try {
+                let resO = await fetch(API_ORDERS_URL);
+                orders = resO.ok ? await resO.json() : defaultOrders;
+            } catch { orders = defaultOrders; }
+
+            renderPublicMenu(foods);
+            renderAdminFoods();
+            renderAdminOrders();
+            renderOrderTracking();
+        }
+
+        // --- 3. LOGIC ROUTING ĐIỀU HƯỚNG MÀN HÌNH ---
+        function switchView(viewId) {
+            document.querySelectorAll('.app-view').forEach(view => view.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            
+            // Đồng bộ thanh menu active linh hoạt
+            document.getElementById('lnk-menu').classList.remove('active');
+            document.getElementById('lnk-tracking').classList.remove('active');
+            
+            if(viewId === 'public-menu') document.getElementById('lnk-menu').classList.add('active');
+            if(viewId === 'public-tracking') document.getElementById('lnk-tracking').classList.add('active');
+        }
+
+        function toggleRole() {
+            if (currentRole === 'public') {
+                currentRole = 'admin';
+                document.getElementById('btnRoleToggle').innerHTML = '<i class="fa-solid fa-earth-asia"></i> Chuyển về Khách';
+                switchView('admin-dashboard');
+            } else {
+                currentRole = 'public';
+                document.getElementById('btnRoleToggle').innerHTML = '<i class="fa-solid fa-user-gear"></i> Chuyển sang Admin';
+                switchView('public-menu');
+            }
+        }
+
+        function switchAdminTab(tabName) {
+            document.getElementById('menu-item-foods').classList.remove('active');
+            document.getElementById('menu-item-orders').classList.remove('active');
+            document.getElementById('admin-subview-foods').classList.remove('active');
+            document.getElementById('admin-subview-orders').classList.remove('active');
+
+            document.getElementById(`menu-item-${tabName}`).classList.add('active');
+            document.getElementById(`admin-subview-${tabName}`).classList.add('active');
+        }
+
+        // --- 4. CHỨC NĂNG DÀNH CHO KHÁCH HÀNG (PUBLIC) ---
+        function renderPublicMenu(data) {
+            const grid = document.getElementById("publicFoodGrid");
+            if(data.length === 0) {
+                grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:50px; color:var(--text-muted);">Không tìm thấy sản phẩm phù hợp.</div>`;
+                return;
+            }
+            grid.innerHTML = data.map(item => `
+                <div class="food-card">
+                    <img src="${item.image || 'https://via.placeholder.com/300x180?text=No+Image'}" alt="${item.name}">
+                    <div class="food-body">
+                        <span class="food-tag">${item.category}</span>
+                        <h4 class="food-title">${item.name}</h4>
+                        <p class="food-text">${item.description || 'Món ăn đậm đà, chuẩn vị thơm ngon, được chế biến từ nguyên liệu sạch hằng ngày.'}</p>
+                        <div class="food-price-action">
+                            <span class="card-price">${Number(item.price).toLocaleString('vi-VN')} đ</span>
+                            <button class="btn-add-cart" onclick="addToCart('${item.id}')"><i class="fa-solid fa-cart-plus"></i> Chọn</button>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function filterFoodMenu() {
+            const searchVal = document.getElementById("custSearchInput").value.toLowerCase();
+            const catVal = document.getElementById("custCategorySelect").value;
+            
+            let filtered = foods.filter(item => {
+                let matchSearch = item.name.toLowerCase().includes(searchVal) || (item.description && item.description.toLowerCase().includes(searchVal));
+                let matchCat = catVal === 'all' || item.category === catVal;
+                return matchSearch && matchCat;
+            });
+            renderPublicMenu(filtered);
+        }
+
+        function addToCart(id) {
+            let p = foods.find(x => x.id === id);
+            let inCart = cart.find(x => x.id === id);
+            if(inCart) {
+                inCart.qty++;
+            } else {
+                cart.push({...p, qty: 1});
+            }
+            updateCartGlobalCount();
+            renderCartTable();
+        }
+
+        function updateCartGlobalCount() {
+            let totalQty = cart.reduce((s, x) => s + x.qty, 0);
+            document.getElementById("cartCountGlobal").textContent = totalQty;
+        }
+
+        function changeQty(id, delta) {
+            let inCart = cart.find(x => x.id === id);
+            if(inCart) {
+                inCart.qty += delta;
+                if(inCart.qty <= 0) cart = cart.filter(x => x.id !== id);
+            }
+            updateCartGlobalCount();
+            renderCartTable();
+        }
+
+        function removeCartItem(id) {
+            cart = cart.filter(x => x.id !== id);
+            updateCartGlobalCount();
+            renderCartTable();
+        }
+
+        function renderCartTable() {
+            const tbody = document.getElementById("cartTableBody");
+            if(cart.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center; color:var(--text-muted); padding:30px;">Giỏ hàng của bạn đang trống! Hãy chọn món ăn.</td></tr>`;
+                document.getElementById("txt-subtotal").textContent = "0 đ";
+                document.getElementById("txt-total").textContent = "0 đ";
+                return;
+            }
+            tbody.innerHTML = cart.map(item => `
+                <tr>
+                    <td><strong>${item.name}</strong></td>
+                    <td>${Number(item.price).toLocaleString('vi-VN')} đ</td>
+                    <td>
+                        <div class="qty-controls">
+                            <button class="btn-qty" onclick="changeQty('${item.id}', -1)">-</button>
+                            <span>${item.qty}</span>
+                            <button class="btn-qty" onclick="changeQty('${item.id}', 1)">+</button>
+                        </div>
+                    </td>
+                    <td>${Number(item.price * item.qty).toLocaleString('vi-VN')} đ</td>
+                    <td><button class="btn-delete-item" onclick="removeCartItem('${item.id}')"><i class="fa-solid fa-trash-can"></i></button></td>
+                </tr>
+            `).join('');
+
+            let subtotal = cart.reduce((s, x) => s + (x.price * x.qty), 0);
+            let total = subtotal + 15000;
+            document.getElementById("txt-subtotal").textContent = subtotal.toLocaleString('vi-VN') + " đ";
+            document.getElementById("txt-total").textContent = total.toLocaleString('vi-VN') + " đ";
+        }
+
+        // BIỂU MẪU KIỂM TRA ĐẦU VÀO (INPUT VALIDATION) KHI ĐẶT HÀNG
+        function validateAndCheckout() {
+            if(cart.length === 0) { alert("Giỏ hàng của bạn trống rỗng."); return;}
+            
+            let name = document.getElementById("orderName").value.trim();
+            let phone = document.getElementById("orderPhone").value.trim();
+            let address = document.getElementById("orderAddress").value.trim();
+            let isValid = true;
+
+            if(name.length < 2) { document.getElementById("err-name").style.display="block"; isValid=false; }
+            else { document.getElementById("err-name").style.display="none"; }
+
+            let phoneRegex = /^[0-9]{9,11}$/;
+            if(!phoneRegex.test(phone)) { document.getElementById("err-phone").style.display="block"; isValid=false; }
+            else { document.getElementById("err-phone").style.display="none"; }
+
+            if(address.length < 8) { document.getElementById("err-address").style.display="block"; isValid=false; }
+            else { document.getElementById("err-address").style.display="none"; }
+
+            if(!isValid) return;
+
+            // Xử lý tạo đơn mới
+            let itemSummary = cart.map(x => `${x.name} x${x.qty}`).join(", ");
+            let subtotal = cart.reduce((s, x) => s + (x.price * x.qty), 0);
+            
+            let newOrder = {
+                id: String(Date.now()).slice(-4),
+                customerName: name,
+                phone: phone,
+                address: address,
+                items: itemSummary,
+                total: subtotal + 15000,
+                status: "Pending" // Mặc định: Chờ xử lý
+            };
+
+            orders.unshift(newOrder); // Đưa lên đầu danh sách
+            alert("🎉 Đặt hàng thành công! Trạng thái: Chờ nhà hàng phê duyệt.");
+            
+            // Xóa sạch form & giỏ hàng
+            cart = [];
+            document.getElementById("checkoutForm").reset();
+            updateCartGlobalCount();
+            renderCartTable();
+            
+            // Cập nhật lại các bảng dữ liệu
+            renderAdminOrders();
+            renderOrderTracking();
+            switchView('public-tracking');
+        }
+
+        function renderOrderTracking() {
+            const list = document.getElementById("orderTrackingList");
+            if(orders.length === 0) {
+                list.innerHTML = `<p style="color:var(--text-muted);">Bạn chưa có lịch sử đặt hàng nào.</p>`;
+                return;
+            }
+            list.innerHTML = orders.map(ord => `
+                <div class="order-tracking-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                        <strong>Mã Đơn Hàng: #${ord.id}</strong>
+                        <span class="badge-status ${ord.status==='Pending'?'status-pending':ord.status==='Shipping'?'status-shipping':ord.status==='Completed'?'status-completed':'status-cancelled'}">
+                            ${ord.status==='Pending'?'Chờ xử lý':ord.status==='Shipping'?'Đang giao':ord.status==='Completed'?'Đã giao':'Đã hủy'}
+                        </span>
+                    </div>
+                    <p style="font-size:14px; margin-bottom:5px;"><strong>Món ăn:</strong> ${ord.items}</p>
+                    <p style="font-size:14px; margin-bottom:5px;"><strong>Địa chỉ nhận:</strong> ${ord.address}</p>
+                    <p style="font-size:14px; font-weight:bold; color:var(--primary-color);">Tổng thanh toán: ${Number(ord.total).toLocaleString('vi-VN')} đ</p>
+                </div>
+            `).join('');
+        }
+
+
+        // --- 5. CHỨC NĂNG DÀNH CHO QUẢN TRỊ VIÊN (ADMIN) ---
+        function renderAdminFoods() {
+            const tbody = document.getElementById("adminFoodTableBody");
+            tbody.innerHTML = foods.map(item => `
+                <tr>
+                    <td><img src="${item.image || 'https://via.placeholder.com/50'}" style="width:50px; height:40px; object-fit:cover; border-radius:4px;"></td>
+                    <td><strong>${item.name}</strong></td>
+                    <td>${item.category}</td>
+                    <td>${Number(item.price).toLocaleString('vi-VN')} đ</td>
+                    <td>
+                        <button class="btn-action btn-edit" onclick="openFoodModal('edit', '${item.id}')"><i class="fa-solid fa-pen"></i> Sửa</button>
+                        <button class="btn-action btn-delete" onclick="deleteFood('${item.id}')"><i class="fa-solid fa-trash"></i> Xóa</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderAdminOrders() {
+            const tbody = document.getElementById("adminOrderTableBody");
+            tbody.innerHTML = orders.map(ord => `
+                <tr>
+                    <td><strong>#${ord.id}</strong></td>
+                    <td>
+                        <div><strong>${ord.customerName}</strong></div>
+                        <div style="font-size:12px; color:var(--text-muted);">${ord.phone}</div>
+                    </td>
+                    <td style="font-size:13px; max-width:250px;">
+                        <div>${ord.items}</div>
+                        <div style="font-size:11px; color:var(--text-muted);">${ord.address}</div>
+                    </td>
+                    <td style="color:var(--primary-color); font-weight:bold;">${Number(ord.total).toLocaleString('vi-VN')} đ</td>
+                    <td>
+                        <span class="badge-status ${ord.status==='Pending'?'status-pending':ord.status==='Shipping'?'status-shipping':ord.status==='Completed'?'status-completed':'status-cancelled'}">
+                            ${ord.status==='Pending'?'Chờ xử lý':ord.status==='Shipping'?'Đang giao':ord.status==='Completed'?'Đã giao':'Đã hủy'}
+                        </span>
+                    </td>
+                    <td>
+                        <select onchange="updateOrderStatus('${ord.id}', this.value)" style="padding:4px; font-size:12px; border-radius:4px;">
+                            <option value="Pending" ${ord.status==='Pending'?'selected':''}>Chờ xử lý</option>
+                            <option value="Shipping" ${ord.status==='Shipping'?'selected':''}>Đang giao</option>
+                            <option value="Completed" ${ord.status==='Completed'?'selected':''}>Đã giao</option>
+                            <option value="Cancelled" ${ord.status==='Cancelled'?'selected':''}>Đủy đơn</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateOrderStatus(orderId, newStatus) {
+            let o = orders.find(x => x.id === orderId);
+            if(o) {
+                o.status = newStatus;
+                renderAdminOrders();
+                renderOrderTracking();
+            }
+        }
+
+        function deleteFood(id) {
+            if(confirm("Bạn chắc chắn muốn xóa món ăn này khỏi thực đơn?")) {
+                foods = foods.filter(x => x.id !== id);
+                renderAdminFoods();
+                renderPublicMenu(foods);
+            }
+        }
+
+        // ĐIỀU KHIỂN ĐÓNG MỞ MODAL THÊM/SỬA MÓN
+        function openFoodModal(mode, id = null) {
+            const modal = document.getElementById("foodModal");
+            modal.style.display = "flex";
+            if(mode === 'add') {
+                document.getElementById("modalTitle").textContent = "Thêm món ăn mới";
+                document.getElementById("modalFoodId").value = "";
+                document.getElementById("modalFoodName").value = "";
+                document.getElementById("modalFoodPrice").value = "";
+                document.getElementById("modalFoodImage").value = "";
+                document.getElementById("modalFoodDesc").value = "";
+            } else {
+                document.getElementById("modalTitle").textContent = "Cập nhật món ăn";
+                let item = foods.find(x => x.id === id);
+                if(item) {
+                    document.getElementById("modalFoodId").value = item.id;
+                    document.getElementById("modalFoodName").value = item.name;
+                    document.getElementById("modalFoodCategory").value = item.category;
+                    document.getElementById("modalFoodPrice").value = item.price;
+                    document.getElementById("modalFoodImage").value = item.image;
+                    document.getElementById("modalFoodDesc").value = item.description || "";
+                }
+            }
+        }
+
+        function closeFoodModal() {
+            document.getElementById("foodModal").style.display = "none";
+        }
+
+        function saveFoodForm() {
+            let id = document.getElementById("modalFoodId").value;
+            let name = document.getElementById("modalFoodName").value.trim();
+            let category = document.getElementById("modalFoodCategory").value;
+            let price = Number(document.getElementById("modalFoodPrice").value);
+            let image = document.getElementById("modalFoodImage").value.trim() || "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400";
+            let description = document.getElementById("modalFoodDesc").value.trim();
+
+            if(!name || !price) { alert("Vui lòng điền đủ Tên và Giá bán."); return; }
+
+            if(id) { // Chế độ Sửa (Update)
+                let item = foods.find(x => x.id === id);
+                if(item) {
+                    item.name = name;
+                    item.category = category;
+                    item.price = price;
+                    item.image = image;
+                    item.description = description;
+                }
+            } else { // Chế độ Thêm mới (Create)
+                let newFood = {
+                    id: String(Date.now()),
+                    name, category, price, image, description
+                };
+                foods.push(newFood);
+            }
+
+            closeFoodModal();
+            renderAdminFoods();
+            renderPublicMenu(foods);
+        }
+    </script>
+</body>
+</html>
